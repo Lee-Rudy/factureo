@@ -1,13 +1,21 @@
-# factureo
-Application mobile avec React Native , Typescript : Factureo est une application mobile de gestion comptable centralisée. L'objectif est de simplifier la vie des entrepreneurs face à la réforme de la facture électronique de septembre 2026.
+# Factureo - Application Mobile
 
-# React Native
-React Native - Expo - Typescript
+Application mobile de gestion de factures développée avec React Native, Expo et TypeScript
 
-# setup creation du projet
-npx create-expo-app@latest factureo --template
+# Description du projet 
+Factureo est une application mobile de gestion comptable centralisée. L'objectif est de
+simplifier la vie des entrepreneurs face à la réforme de la facture électronique de septembre
+2026.
 
-# start projet
-- première installation : npm install
-- Démarrage : npm run start
+### Installation
+
+npm install
+
+### Lancement
+
+# Démarrer le serveur
+npm run start
+
+# ou cette commande pour démarrer le serveur
+npx expo start
 
