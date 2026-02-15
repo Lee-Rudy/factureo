@@ -11,6 +11,7 @@ import { RootStackParamList, ROUTES } from './routesConfig';
 
 // Screens
 import AuthScreen from '../screens/AuthScreen';
+import RegisterScreen from '../screens/RegisterScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -27,9 +28,7 @@ export default function Routes() {
             }}
           >
             <Stack.Screen name={ROUTES.AUTH} component={AuthScreen} />
-            
-            {/* Ajoutez vos nouvelles routes ici */}
-            {/* Example: <Stack.Screen name={ROUTES.HOME} component={HomeScreen} /> */}
+            <Stack.Screen name={ROUTES.REGISTER} component={RegisterScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </AuthProvider>

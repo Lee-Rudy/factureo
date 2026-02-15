@@ -3,35 +3,28 @@
  * Page d'accueil de l'application avec options de connexion et création de compte
  */
 
-import React, { useState } from 'react';
-import { View, StyleSheet, Dimensions, Alert } from 'react-native';
+import React from 'react';
+import { View, StyleSheet, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { GradientBackground, Text, Button } from '../components';
 import { spacing } from '../theme';
-import { useAuth } from '../contexts/AuthContext';
+import { ROUTES } from '../routes/routesConfig';
+import { RootStackParamList } from '../routes/routesConfig';
 
 const { height } = Dimensions.get('window');
 
 export default function AuthScreen() {
-  const { login, isLoading } = useAuth();
-  const [mode, setMode] = useState<'welcome' | 'login' | 'register'>('welcome');
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const handleCreateAccount = () => {
-    setMode('register');
+    navigation.navigate(ROUTES.REGISTER);
   };
 
   const handleLogin = () => {
-    setMode('login');
-  };
-
-  const handleLoginSubmit = async () => {
-    try {
-      await login('test@example.com', 'password');
-      Alert.alert('Succès', 'Connexion réussie !');
-    } catch (error) {
-      Alert.alert('Erreur', 'Échec de la connexion');
-    }
+    // TODO: navigation vers écran Connexion
   };
 
   return (
@@ -66,21 +59,17 @@ export default function AuthScreen() {
               variant="secondary"
               size="large"
               fullWidth
-              loading={isLoading && mode === 'register'}
-              disabled={isLoading}
               onPress={handleCreateAccount}
             />
             
             <View style={styles.loginButtonContainer}>
               <Button
                 title="CONNEXION"
-                variant="secondary"
+                variant="outline"
                 size="large"
                 fullWidth
                 borderColor="#FFFFFF"
                 textColor="#FFFFFF"
-                loading={isLoading && mode === 'login'}
-                disabled={isLoading}
                 onPress={handleLogin}
               />
             </View>
