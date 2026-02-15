@@ -37,6 +37,7 @@ interface DrawerMenuProps {
   menuItems: MenuItem[];
   onLogout: () => void;
   activeRoute?: string;
+  headerHeight?: number;
 }
 
 export const DrawerMenu: React.FC<DrawerMenuProps> = ({
@@ -47,6 +48,7 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({
   menuItems,
   onLogout,
   activeRoute = 'Tableau de bord',
+  headerHeight = 0,
 }) => {
   const translateX = useRef(new Animated.Value(-drawerWidth)).current;
   const overlayOpacity = useRef(new Animated.Value(0)).current;
@@ -90,6 +92,7 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({
           style={[
             styles.overlay,
             {
+              top: headerHeight,
               opacity: overlayOpacity,
             },
           ]}
@@ -100,6 +103,7 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({
         style={[
           styles.drawer,
           {
+            top: headerHeight,
             transform: [{ translateX }],
           },
         ]}
@@ -189,20 +193,26 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    ...StyleSheet.absoluteFillObject,
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
     zIndex: 999,
   },
   overlay: {
-    ...StyleSheet.absoluteFillObject,
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   drawer: {
     position: 'absolute',
     left: 0,
-    top: 0,
     bottom: 0,
     width: drawerWidth,
-    zIndex: 1000,
+    zIndex: 999,
   },
   gradient: {
     flex: 1,

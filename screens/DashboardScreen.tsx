@@ -89,6 +89,7 @@ export default function DashboardScreen() {
   const navigation = useNavigation<Nav>();
   const { user, logout } = useAuth();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [headerHeight, setHeaderHeight] = useState(0);
 
   const menuItems = [
     {
@@ -136,28 +137,33 @@ export default function DashboardScreen() {
     <View style={styles.screen}>
       <StatusBar style="light" />
 
-      <LinearGradient
-        colors={[colors.background.gradient.start, colors.background.gradient.end]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-        style={styles.header}
+      <View
+        style={styles.headerContainer}
+        onLayout={(e) => setHeaderHeight(e.nativeEvent.layout.height)}
       >
-        <SafeAreaView edges={['top']}>
-          <View style={styles.headerContent}>
-            <TouchableOpacity
-              style={styles.menuButton}
-              onPress={() => setIsDrawerOpen(true)}
-              hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-            >
-              <Ionicons name="menu" size={28} color={colors.text.inverse} />
-            </TouchableOpacity>
-            <Text variant="h3" color="inverse" bold>
-              Tableau de bord
-            </Text>
-            <View style={styles.menuButton} />
-          </View>
-        </SafeAreaView>
-      </LinearGradient>
+        <LinearGradient
+          colors={[colors.background.gradient.start, colors.background.gradient.end]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.header}
+        >
+          <SafeAreaView edges={['top']}>
+            <View style={styles.headerContent}>
+              <TouchableOpacity
+                style={styles.menuButton}
+                onPress={() => setIsDrawerOpen(true)}
+                hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+              >
+                <Ionicons name="menu" size={28} color={colors.text.inverse} />
+              </TouchableOpacity>
+              <Text variant="h3" color="inverse" bold>
+                Tableau de bord
+              </Text>
+              <View style={styles.menuButton} />
+            </View>
+          </SafeAreaView>
+        </LinearGradient>
+      </View>
 
       <ScrollView
         style={styles.scrollView}
@@ -266,6 +272,7 @@ export default function DashboardScreen() {
         menuItems={menuItems}
         onLogout={handleLogout}
         activeRoute="Tableau de bord"
+        headerHeight={headerHeight}
       />
     </View>
   );
@@ -275,6 +282,9 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: colors.background.pageLight,
+  },
+  headerContainer: {
+    zIndex: 1000,
   },
   header: {
     paddingBottom: spacing.base,
