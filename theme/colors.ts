@@ -15,6 +15,7 @@ export const colors = {
   // Couleurs secondaires
   secondary: {
     main: '#002A61',
+    // main: '#1800AD', //autre couleur
     light: '#003D8F',
     dark: '#001F47',
     contrast: '#FFFFFF',
@@ -39,14 +40,14 @@ export const colors = {
   },
 
   // Backgrounds color bouttons
-  backgroundButton: {
-    default: '#FFFFFF',
-    paper: '#F8F9FA',
-    gradient: {
-      start: '#002A61',
-      end: '#002A70',
-    },
-  },
+  // backgroundButton: {
+  //   default: '#FFFFFF',
+  //   paper: '#F8F9FA',
+  //   gradient: {
+  //     start: '#002A61',
+  //     end: '#002A70',
+  //   },
+  // },
   // Surfaces
   surface: {
     primary: '#FFFFFF',
