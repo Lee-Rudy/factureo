@@ -24,7 +24,7 @@ export default function AuthScreen() {
   };
 
   const handleLogin = () => {
-    // TODO: navigation vers écran Connexion
+    navigation.navigate(ROUTES.LOGIN);
   };
 
   return (
@@ -56,7 +56,7 @@ export default function AuthScreen() {
           <View style={styles.buttonSection}>
             <Button
               title="CRÉER UN COMPTE"
-              variant="secondary"
+              variant="primary"
               size="large"
               fullWidth
               onPress={handleCreateAccount}
