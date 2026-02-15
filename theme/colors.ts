@@ -38,6 +38,10 @@ export const colors = {
       start: '#002A61',
       end: '#FF3EFF',
     },
+    gradientMenu: {
+      start: '#002A61',
+      end: '#FF3EFF',
+    },
   },
 
   // Backgrounds color boutons
