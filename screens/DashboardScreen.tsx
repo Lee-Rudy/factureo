@@ -151,7 +151,7 @@ export default function DashboardScreen() {
             <View style={styles.headerContent}>
               <TouchableOpacity
                 style={styles.menuButton}
-                onPress={() => setIsDrawerOpen(true)}
+                onPress={() => setIsDrawerOpen(!isDrawerOpen)}
                 hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
               >
                 <Ionicons name="menu" size={28} color={colors.text.inverse} />
