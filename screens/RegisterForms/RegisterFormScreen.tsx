@@ -36,6 +36,7 @@ export default function RegisterFormScreen() {
   const [companyName, setCompanyName] = useState('');
   const [address, setAddress] = useState('');
 
+  const [accountName, setAccountName] = useState('');
   const [bankName, setBankName] = useState('');
   const [iban, setIban] = useState('');
   const [swift, setSwift] = useState('');
@@ -209,9 +210,9 @@ export default function RegisterFormScreen() {
 
                   <Input
                     label="Titulaires du compte"
-                    placeholder="Ex: Numéro de compte"
-                    value={bankName}
-                    onChangeText={setBankName}
+                    placeholder="Ex: Nom du compte"
+                    value={accountName}
+                    onChangeText={setAccountName}
                     variant="outlined"
                     required
                     style={styles.input}
