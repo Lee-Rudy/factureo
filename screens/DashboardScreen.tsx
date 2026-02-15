@@ -2,14 +2,18 @@
  * Écran Dashboard - Tableau de bord
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { Text, Card } from '../components';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { Text, Card, DrawerMenu } from '../components';
 import { colors, spacing } from '../theme';
+import { useAuth } from '../contexts/AuthContext';
+import { RootStackParamList, ROUTES } from '../routes/routesConfig';
 
 interface DashboardItemProps {
   title: string;
@@ -79,7 +83,55 @@ const DashboardItem: React.FC<DashboardItemProps> = ({
   </Card>
 );
 
+type Nav = NativeStackNavigationProp<RootStackParamList, 'Dashboard'>;
+
 export default function DashboardScreen() {
+  const navigation = useNavigation<Nav>();
+  const { user, logout } = useAuth();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const menuItems = [
+    {
+      icon: 'home-outline' as const,
+      label: 'Tableau de bord',
+      onPress: () => setIsDrawerOpen(false),
+    },
+    {
+      icon: 'cube-outline' as const,
+      label: 'Produits',
+      onPress: () => {},
+    },
+    {
+      icon: 'people-outline' as const,
+      label: 'Clients',
+      onPress: () => {},
+    },
+    {
+      icon: 'document-text-outline' as const,
+      label: 'Devis',
+      hasDropdown: true,
+      onPress: () => {},
+    },
+    {
+      icon: 'receipt-outline' as const,
+      label: 'Facture',
+      hasDropdown: true,
+      onPress: () => {},
+    },
+    {
+      icon: 'settings-outline' as const,
+      label: 'Paramètres',
+      hasDropdown: true,
+      onPress: () => {},
+    },
+  ];
+
+  const handleLogout = () => {
+    logout();
+    setIsDrawerOpen(false);
+    navigation.navigate(ROUTES.AUTH);
+  };
+
   return (
     <View style={styles.screen}>
       <StatusBar style="light" />
@@ -94,7 +146,7 @@ export default function DashboardScreen() {
           <View style={styles.headerContent}>
             <TouchableOpacity
               style={styles.menuButton}
-              disabled
+              onPress={() => setIsDrawerOpen(true)}
               hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
             >
               <Ionicons name="menu" size={28} color={colors.text.inverse} />
@@ -117,8 +169,8 @@ export default function DashboardScreen() {
           count="2 Produit(s)"
           icon="cube-outline"
           recentItems={[
-            { label: 'Informatique', value: 'MCSPDT2\n40 000', link: 'voir' },
-            { label: 'Agence immobilier', value: 'MCSPDT1\n10 000', link: 'voir' },
+            { label: 'Informatique', value: 'MCSPDT2\n40 000' },
+            { label: 'Agence immobilier', value: 'MCSPDT1\n10 000' },
           ]}
           linkText="Voir tous les produits"
           onLinkPress={() => {}}
@@ -128,7 +180,7 @@ export default function DashboardScreen() {
           title="Clients"
           count="1 Client(s)"
           icon="people-outline"
-          recentItems={[{ label: 'Moocles', value: 'Iden :R\nxxxx xxxx xxx', link: 'voir' }]}
+          recentItems={[{ label: 'Moocles', value: 'Iden :R\nxxxx xxxx xxx' }]}
           linkText="Voir tous les clients"
           onLinkPress={() => {}}
         />
@@ -205,6 +257,16 @@ export default function DashboardScreen() {
           </TouchableOpacity>
         </Card>
       </ScrollView>
+
+      <DrawerMenu
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        userName={user?.name || 'Heritsilavina RAZAFIARISON'}
+        userRole="Gestionnaire de flotte"
+        menuItems={menuItems}
+        onLogout={handleLogout}
+        activeRoute="Tableau de bord"
+      />
     </View>
   );
 }
