@@ -10,3 +10,5 @@ export { Input } from './Input';
 export { Container } from './Container';
 export { Checkbox } from './Checkbox';
 export { DrawerMenu } from './DrawerMenu';
+export { ProgressBar } from './ProgressBar';
+export { PhoneInput } from './PhoneInput';

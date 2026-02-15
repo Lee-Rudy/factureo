@@ -36,12 +36,7 @@ export default function RegisterScreen() {
       Alert.alert('Attention', 'Veuillez accepter les conditions générales.');
       return;
     }
-    try {
-      await register(email, password, 'Utilisateur');
-      navigation.navigate(ROUTES.DASHBOARD);
-    } catch {
-      Alert.alert('Erreur', 'Échec de l\'inscription.');
-    }
+    navigation.navigate(ROUTES.REGISTER_FORM);
   };
 
   const goToLogin = () => navigation.navigate(ROUTES.LOGIN);

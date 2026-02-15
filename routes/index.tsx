@@ -14,6 +14,7 @@ import AuthScreen from '../screens/AuthScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import LoginScreen from '../screens/LoginScreen';
 import DashboardScreen from '../screens/DashboardScreen';
+import RegisterFormScreen from '../screens/RegisterForms/RegisterFormScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -33,6 +34,7 @@ export default function Routes() {
             <Stack.Screen name={ROUTES.REGISTER} component={RegisterScreen} />
             <Stack.Screen name={ROUTES.LOGIN} component={LoginScreen} />
             <Stack.Screen name={ROUTES.DASHBOARD} component={DashboardScreen} />
+            <Stack.Screen name={ROUTES.REGISTER_FORM} component={RegisterFormScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </AuthProvider>

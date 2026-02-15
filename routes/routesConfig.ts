@@ -7,6 +7,7 @@ export type RootStackParamList = {
   Register: undefined;
   Login: undefined;
   Dashboard: undefined;
+  RegisterForm: undefined;
 };
 
 export const ROUTES = {
@@ -14,4 +15,5 @@ export const ROUTES = {
   REGISTER: 'Register' as const,
   LOGIN: 'Login' as const,
   DASHBOARD: 'Dashboard' as const,
+  REGISTER_FORM: 'RegisterForm' as const,
 } as const;
