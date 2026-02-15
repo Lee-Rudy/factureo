@@ -38,7 +38,7 @@ export default function RegisterScreen() {
     }
     try {
       await register(email, password, 'Utilisateur');
-      Alert.alert('Succès', 'Compte créé !');
+      navigation.navigate(ROUTES.DASHBOARD);
     } catch {
       Alert.alert('Erreur', 'Échec de l\'inscription.');
     }

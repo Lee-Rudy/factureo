@@ -15,7 +15,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import { Ionicons } from '@expo/vector-icons';
 import { Text, Button, Card, Input } from '../components';
 import { colors, spacing } from '../theme';
 import { useAuth } from '../contexts/AuthContext';
@@ -36,7 +36,7 @@ export default function LoginScreen() {
   const handleSubmit = async () => {
     try {
       await login(email, password);
-      Alert.alert('Succès', 'Connexion réussie !');
+      navigation.navigate(ROUTES.DASHBOARD);
     } catch {
       Alert.alert('Erreur', 'Échec de la connexion.');
     }
