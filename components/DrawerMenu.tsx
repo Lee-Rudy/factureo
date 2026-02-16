@@ -23,6 +23,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { Text } from './Text';
+import { Logo } from './Logo';
 import { colors, spacing, borderRadius } from '../theme';
 
 const { width } = Dimensions.get('window');
@@ -123,9 +124,7 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({
         >
           <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
             <View style={styles.header}>
-              <Text variant="h2" color="inverse" bold>
-                FACTUREO
-              </Text>
+              <Logo width={240} height={77} />
             </View>
 
             <View style={styles.menuContent}>

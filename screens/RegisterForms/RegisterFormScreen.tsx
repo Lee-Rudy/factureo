@@ -20,7 +20,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
-import { Text, Button, Card, Input, ProgressBar, PhoneInput } from '../../components';
+import { Text, Button, Card, Input, ProgressBar, PhoneInput, Logo } from '../../components';
 import { colors, spacing } from '../../theme';
 import { useAuth } from '../../src/ui/context/AuthContext';
 import { RootStackParamList, ROUTES } from '../../routes/routesConfig';
@@ -118,9 +118,7 @@ export default function RegisterFormScreen() {
             <ProgressBar currentStep={step} totalSteps={2} />
 
             <View style={styles.logoWrap}>
-              <Text variant="h1" style={styles.logoText}>
-                FACTUREO
-              </Text>
+              <Logo width={200} height={64} />
             </View>
 
             <Card variant="elevated" elevation="none" padding="medium" style={styles.card}>
@@ -338,9 +336,6 @@ const styles = StyleSheet.create({
   logoWrap: {
     alignItems: 'center',
     marginBottom: spacing.base,
-  },
-  logoText: {
-    color: colors.tertiary.main,
   },
   card: {
     marginTop: spacing.base,

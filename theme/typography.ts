@@ -4,21 +4,20 @@
  */
 
 export const fontFamilies = {
-  // Titres - Poppins (temporaire, à remplacer )
+  // Titres — Coco Sharp Bold (assets/fonts/Coco-Sharp-Bold-trial.ttf)
   heading: {
-    regular: 'System', // Sera remplacé par Poppins-Regular
-    medium: 'System', // Sera remplacé par Poppins-Medium
-    semibold: 'System', // Sera remplacé par Poppins-SemiBold
-    bold: 'System', // Sera remplacé par Poppins-Bold
+    regular: 'CocoSharp-Bold',
+    medium: 'CocoSharp-Bold',
+    semibold: 'CocoSharp-Bold',
+    bold: 'CocoSharp-Bold',
   },
-  // Corps de texte - Inter
+  // Sous-titres et corps — Inter
   body: {
-    regular: 'Inter-Regular',
-    medium: 'Inter-Medium',
-    semibold: 'Inter-SemiBold',
-    bold: 'Inter-Bold',
+    regular: 'Inter_400Regular',
+    medium: 'Inter_500Medium',
+    semibold: 'Inter_600SemiBold',
+    bold: 'Inter_700Bold',
   },
-  // Fallback système
   system: 'System',
 } as const;
 

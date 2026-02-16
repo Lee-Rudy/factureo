@@ -17,7 +17,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Text, Button, Card, Input, Checkbox } from '../components';
+import { Text, Button, Card, Input, Checkbox, Logo } from '../components';
 import { colors, spacing } from '../theme';
 import { useAuth } from '../src/ui/context/AuthContext';
 import { RootStackParamList } from '../routes/routesConfig';
@@ -65,9 +65,7 @@ export default function RegisterScreen() {
             </TouchableOpacity>
 
             <View style={styles.logoWrap}>
-              <Text variant="h1" style={styles.logoText}>
-                FACTUREO
-              </Text>
+              <Logo width={200} height={64} />
             </View>
 
             {/* effet shadow  */}
@@ -176,9 +174,6 @@ const styles = StyleSheet.create({
   logoWrap: {
     alignItems: 'center',
     marginBottom: spacing.base,
-  },
-  logoText: {
-    color: colors.tertiary.main,
   },
   card: {
     marginBottom: spacing.base,

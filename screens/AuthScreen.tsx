@@ -9,7 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { GradientBackground, Text, Button } from '../components';
+import { GradientBackground, Logo, Text, Button } from '../components';
 import { spacing } from '../theme';
 import { ROUTES } from '../routes/routesConfig';
 import { RootStackParamList } from '../routes/routesConfig';
@@ -34,9 +34,7 @@ export default function AuthScreen() {
         <View style={styles.content}>
           {/* Section Logo */}
           <View style={styles.logoSection}>
-            <Text variant="h1" color="inverse" centered bold>
-              FACTUREO
-            </Text>
+            <Logo width={290} height={90} />
           </View>
 
           {/* Section Titre Principal */}
