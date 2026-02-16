@@ -1,8 +1,9 @@
 /**
- * Modale Formulaire Facture - Création
+ * Modale Formulaire Facture - Création / Édition
+ * Lignes dynamiques (+ / -), calcul total
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -16,15 +17,33 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { Text, Button, Input } from '../../components';
 import { colors, spacing, borderRadius } from '../../theme';
-import { useCreateFacture } from '../../src/ui/queries/factures';
+import { useCreateFacture, useUpdateFacture } from '../../src/ui/queries/factures';
 import { Client } from '../../src/domain/entities/Client';
-import { FactureLine } from '../../src/domain/entities/Facture';
+import { Facture, FactureLine } from '../../src/domain/entities/Facture';
+
+type LineState = {
+  id: string;
+  description: string;
+  quantite: string;
+  unitaire: string;
+  tva: string;
+};
+
+const defaultLine = (): LineState => ({
+  id: `line-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+  description: '',
+  quantite: '1',
+  unitaire: '',
+  tva: '20',
+});
 
 interface FactureFormModalProps {
   visible: boolean;
   onClose: () => void;
   userId: string;
   clients: Client[];
+  /** Si fourni = mode édition */
+  factureToEdit?: Facture | null;
 }
 
 export default function FactureFormModal({
@@ -32,45 +51,79 @@ export default function FactureFormModal({
   onClose,
   userId,
   clients,
+  factureToEdit,
 }: FactureFormModalProps) {
+  const isEdit = !!factureToEdit?.id;
+
   const [selectedClientId, setSelectedClientId] = useState('');
   const [showClientPicker, setShowClientPicker] = useState(false);
   const [dateEmission, setDateEmission] = useState(new Date().toISOString().split('T')[0]);
   const [dateEcheance, setDateEcheance] = useState('');
-  const [description, setDescription] = useState('');
-  const [quantite, setQuantite] = useState('1');
-  const [unitaire, setUnitaire] = useState('');
-  const [tva, setTva] = useState('20');
+  const [lines, setLines] = useState<LineState[]>([defaultLine()]);
 
   const createFactureMutation = useCreateFacture();
+  const updateFactureMutation = useUpdateFacture();
 
   const selectedClient = clients.find((c) => c.id === selectedClientId);
+
+  useEffect(() => {
+    if (!visible) return;
+    if (factureToEdit) {
+      setSelectedClientId(factureToEdit.clientId);
+      setDateEmission(new Date(factureToEdit.dateEmission).toISOString().split('T')[0]);
+      setDateEcheance(new Date(factureToEdit.dateEcheance).toISOString().split('T')[0]);
+      setLines(
+        factureToEdit.lines.length > 0
+          ? factureToEdit.lines.map((l) => ({
+              id: l.id,
+              description: l.description,
+              quantite: String(l.quantite),
+              unitaire: String(l.unitaire),
+              tva: String(l.taux_TVA ?? 20),
+            }))
+          : [defaultLine()]
+      );
+    } else {
+      setSelectedClientId('');
+      setDateEmission(new Date().toISOString().split('T')[0]);
+      setDateEcheance('');
+      setLines([defaultLine()]);
+    }
+  }, [visible, factureToEdit]);
 
   const resetForm = () => {
     setSelectedClientId('');
     setDateEmission(new Date().toISOString().split('T')[0]);
     setDateEcheance('');
-    setDescription('');
-    setQuantite('1');
-    setUnitaire('');
-    setTva('20');
+    setLines([defaultLine()]);
+  };
+
+  const addLine = () => setLines((prev) => [...prev, defaultLine()]);
+
+  const removeLine = (id: string) => {
+    if (lines.length <= 1) return;
+    setLines((prev) => prev.filter((l) => l.id !== id));
+  };
+
+  const updateLine = (id: string, field: keyof LineState, value: string) => {
+    setLines((prev) =>
+      prev.map((l) => (l.id === id ? { ...l, [field]: value } : l))
+    );
   };
 
   /**
-   * LOGIQUE MÉTIER : Calcul ligne facture
+   * LOGIQUE MÉTIER : Calcul d'une ligne
    */
-  const calculateLine = (): FactureLine => {
-    const qty = parseFloat(quantite) || 0;
-    const price = parseFloat(unitaire) || 0;
-    const taxRate = parseFloat(tva) || 0;
-
+  const lineToFactureLine = (line: LineState): FactureLine => {
+    const qty = parseFloat(line.quantite) || 0;
+    const price = parseFloat(line.unitaire) || 0;
+    const taxRate = parseFloat(line.tva) || 0;
     const montantHT = qty * price;
     const montantTVA = montantHT * (taxRate / 100);
     const montantTTC = montantHT + montantTVA;
-
     return {
-      id: `line-${Date.now()}`,
-      description,
+      id: line.id,
+      description: line.description,
       quantite: qty,
       unitaire: price,
       montant_HT: montantHT,
@@ -80,34 +133,63 @@ export default function FactureFormModal({
     };
   };
 
+  /**
+   * LOGIQUE MÉTIER : Total TTC de toutes les lignes
+   */
+  const totalTTC = lines.reduce((sum, line) => {
+    const fl = lineToFactureLine(line);
+    return sum + fl.montant_TTC;
+  }, 0);
+
   const handleSubmit = async () => {
     if (!selectedClientId) {
       Alert.alert('Attention', 'Veuillez sélectionner un client');
       return;
     }
-
     if (!dateEcheance) {
-      Alert.alert('Attention', 'Veuillez saisir la date d\'échéance');
+      Alert.alert('Attention', "Veuillez saisir la date d'échéance");
       return;
     }
 
-    if (!description || !unitaire) {
-      Alert.alert('Attention', 'Veuillez remplir les informations de la ligne');
+    const factureLines = lines.map(lineToFactureLine);
+    const hasValidLine = factureLines.some(
+      (l) => l.description.trim() !== '' && l.unitaire > 0 && l.quantite > 0
+    );
+    if (!hasValidLine) {
+      Alert.alert('Attention', 'Au moins une ligne doit avoir une description, une quantité et un prix unitaire');
+      return;
+    }
+
+    const validLines = factureLines.filter(
+      (l) => l.description.trim() !== '' && l.quantite > 0 && l.unitaire >= 0
+    );
+    if (validLines.length === 0) {
+      Alert.alert('Attention', 'Veuillez remplir au moins une ligne valide');
       return;
     }
 
     try {
-      const line = calculateLine();
-
-      await createFactureMutation.mutateAsync({
-        userId,
-        clientId: selectedClientId,
-        dateEmission: new Date(dateEmission),
-        dateEcheance: new Date(dateEcheance),
-        lines: [line],
-      });
-
-      Alert.alert('Succès', 'Facture créée avec succès');
+      if (isEdit && factureToEdit) {
+        await updateFactureMutation.mutateAsync({
+          id: factureToEdit.id,
+          data: {
+            clientId: selectedClientId,
+            dateEmission: new Date(dateEmission),
+            dateEcheance: new Date(dateEcheance),
+            lines: validLines,
+          },
+        });
+        Alert.alert('Succès', 'Facture modifiée avec succès');
+      } else {
+        await createFactureMutation.mutateAsync({
+          userId,
+          clientId: selectedClientId,
+          dateEmission: new Date(dateEmission),
+          dateEcheance: new Date(dateEcheance),
+          lines: validLines,
+        });
+        Alert.alert('Succès', 'Facture créée avec succès');
+      }
       resetForm();
       onClose();
     } catch (error) {
@@ -116,6 +198,8 @@ export default function FactureFormModal({
       }
     }
   };
+
+  const isPending = createFactureMutation.isPending || updateFactureMutation.isPending;
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
@@ -127,14 +211,18 @@ export default function FactureFormModal({
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
               <Text variant="h4" bold>
-                Nouvelle facture
+                {isEdit ? 'Modifier la facture' : 'Nouvelle facture'}
               </Text>
               <TouchableOpacity onPress={onClose}>
                 <Ionicons name="close" size={28} color={colors.text.primary} />
               </TouchableOpacity>
             </View>
 
-            <ScrollView style={styles.modalBody} showsVerticalScrollIndicator={false}>
+            <ScrollView
+              style={styles.modalBody}
+              contentContainerStyle={styles.modalBodyContent}
+              showsVerticalScrollIndicator={false}
+            >
               <Text variant="subtitle1" bold style={styles.sectionTitle}>
                 Informations générales
               </Text>
@@ -159,7 +247,6 @@ export default function FactureFormModal({
                 required
                 style={styles.input}
               />
-
               <Input
                 label="Date d'échéance"
                 placeholder="AAAA-MM-JJ"
@@ -170,61 +257,88 @@ export default function FactureFormModal({
                 style={styles.input}
               />
 
-              <Text variant="subtitle1" bold style={styles.sectionTitle}>
-                Ligne de facturation
-              </Text>
+              <View style={styles.linesHeader}>
+                <Text variant="subtitle1" bold style={styles.sectionTitle}>
+                  Lignes de facturation
+                </Text>
+                <TouchableOpacity onPress={addLine} style={styles.addLineButton}>
+                  <Ionicons name="add-circle" size={28} color={colors.tertiary.main} />
+                  <Text variant="body2" color="primary">Ajouter une ligne</Text>
+                </TouchableOpacity>
+              </View>
 
-              <Input
-                label="Description"
-                placeholder="Description du service/produit"
-                value={description}
-                onChangeText={setDescription}
-                variant="outlined"
-                required
-                multiline
-                style={styles.input}
-              />
+              {lines.map((line) => (
+                <View key={line.id} style={styles.lineBlock}>
+                  <View style={styles.lineRowHeader}>
+                    <Text variant="caption" color="secondary">
+                      Ligne {lines.findIndex((l) => l.id === line.id) + 1}
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() => removeLine(line.id)}
+                      disabled={lines.length <= 1}
+                      style={lines.length <= 1 && styles.deleteDisabled}
+                    >
+                      <Ionicons
+                        name="trash-outline"
+                        size={22}
+                        color={lines.length <= 1 ? colors.text.disabled : colors.error.main}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <Input
+                    label="Description"
+                    placeholder="Description du service/produit"
+                    value={line.description}
+                    onChangeText={(v) => updateLine(line.id, 'description', v)}
+                    variant="outlined"
+                    style={styles.input}
+                  />
+                  <Input
+                    label="Quantité"
+                    placeholder="1"
+                    value={line.quantite}
+                    onChangeText={(v) => updateLine(line.id, 'quantite', v)}
+                    keyboardType="numeric"
+                    variant="outlined"
+                    style={styles.input}
+                  />
+                  <Input
+                    label="Prix unitaire HT (€)"
+                    placeholder="0.00"
+                    value={line.unitaire}
+                    onChangeText={(v) => updateLine(line.id, 'unitaire', v)}
+                    keyboardType="numeric"
+                    variant="outlined"
+                    style={styles.input}
+                  />
+                  <Input
+                    label="TVA (%)"
+                    placeholder="20"
+                    value={line.tva}
+                    onChangeText={(v) => updateLine(line.id, 'tva', v)}
+                    keyboardType="numeric"
+                    variant="outlined"
+                    style={styles.inputLast}
+                  />
+                </View>
+              ))}
 
-              <Input
-                label="Quantité"
-                placeholder="1"
-                value={quantite}
-                onChangeText={setQuantite}
-                keyboardType="numeric"
-                variant="outlined"
-                required
-                style={styles.input}
-              />
-
-              <Input
-                label="Prix unitaire HT (€)"
-                placeholder="0.00"
-                value={unitaire}
-                onChangeText={setUnitaire}
-                keyboardType="numeric"
-                variant="outlined"
-                required
-                style={styles.input}
-              />
-
-              <Input
-                label="TVA (%)"
-                placeholder="20"
-                value={tva}
-                onChangeText={setTva}
-                keyboardType="numeric"
-                variant="outlined"
-                required
-                style={styles.inputLast}
-              />
+              <View style={styles.totalRow}>
+                <Text variant="h4" bold>
+                  Total TTC
+                </Text>
+                <Text variant="h4" bold color="primary">
+                  {totalTTC.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
+                </Text>
+              </View>
 
               <Button
-                title="Créer la facture"
+                title={isEdit ? 'Enregistrer les modifications' : 'Créer la facture'}
                 variant="gradient"
                 size="large"
                 fullWidth
-                loading={createFactureMutation.isPending}
-                disabled={createFactureMutation.isPending}
+                loading={isPending}
+                disabled={isPending}
                 onPress={handleSubmit}
                 style={styles.submitButton}
               />
@@ -253,7 +367,6 @@ export default function FactureFormModal({
                 <Ionicons name="close" size={28} color={colors.text.primary} />
               </TouchableOpacity>
             </View>
-
             <ScrollView>
               {clients.map((client) => (
                 <TouchableOpacity
@@ -311,11 +424,42 @@ const styles = StyleSheet.create({
   },
   modalBody: {
     padding: spacing.xl,
-    paddingBottom: spacing['3xl'],
+  },
+  modalBodyContent: {
+    paddingBottom: 55,
   },
   sectionTitle: {
     marginBottom: spacing.md,
     marginTop: spacing.sm,
+  },
+  linesHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    marginTop: spacing.md,
+  },
+  addLineButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+  },
+  lineBlock: {
+    marginTop: spacing.md,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.sm,
+    borderWidth: 1,
+    borderColor: colors.border.light,
+    borderRadius: borderRadius.md,
+  },
+  lineRowHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: spacing.sm,
+  },
+  deleteDisabled: {
+    opacity: 0.5,
   },
   selectButton: {
     flexDirection: 'row',
@@ -332,20 +476,22 @@ const styles = StyleSheet.create({
   input: {
     marginBottom: 5,
   },
-  row: {
-    flexDirection: 'row',
-    gap: spacing.base,
-  },
-  halfInput: {
-    flex: 1,
-    marginBottom: 12,
-  },
   inputLast: {
     marginBottom: 5,
   },
+  totalRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: spacing.xl,
+    marginBottom: spacing.md,
+    paddingTop: spacing.md,
+    borderTopWidth: 1,
+    borderTopColor: colors.border.main,
+  },
   submitButton: {
-    marginTop: 10,
-    marginBottom: 5,
+    marginTop: spacing.xl,
+    marginBottom: spacing['3xl'],
   },
   pickerOverlay: {
     flex: 1,

@@ -106,3 +106,19 @@ export const useMarkFactureAsPaid = () => {
     },
   });
 };
+
+/**
+ * Hook : Changer le statut d'une facture (réversible)
+ */
+export const useUpdateFactureStatus = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, status }: { id: string; status: FactureStatus }) =>
+      factureUseCases.updateStatus(id, status),
+    onSuccess: (updatedFacture) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.factures.detail(updatedFacture.id) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.factures.all(updatedFacture.userId) });
+    },
+  });
+};

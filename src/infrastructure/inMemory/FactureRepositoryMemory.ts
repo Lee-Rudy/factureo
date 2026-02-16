@@ -81,9 +81,16 @@ export class FactureRepositoryMemory implements FactureRepository {
       throw new Error('Facture introuvable');
     }
 
-    // Interdit modification si payée
-    if (facture.status === FactureStatus.PAID && updates.status !== FactureStatus.PAID) {
-      throw new Error('Impossible de modifier une facture déjà payée');
+    // Interdit modification du contenu (lignes, client, dates) si facture payée ; seul le statut peut être changé (réversible)
+    if (facture.status === FactureStatus.PAID) {
+      const onlyStatus =
+        updates.clientId === undefined &&
+        updates.dateEmission === undefined &&
+        updates.dateEcheance === undefined &&
+        updates.lines === undefined;
+      if (!onlyStatus) {
+        throw new Error('Impossible de modifier le contenu d\'une facture déjà payée');
+      }
     }
 
     const updatedData = {
@@ -122,8 +129,22 @@ export class FactureRepositoryMemory implements FactureRepository {
     db.getFactures().delete(id);
   }
 
+  /**
+   * LOGIQUE MÉTIER : Changement de statut (réversible)
+   * Si on repasse en non payé, date_payee est remise à null
+   */
   async updateStatus(id: string, status: FactureStatus): Promise<Facture> {
-    return this.update(id, { status });
+    const facture = db.getFactures().get(id);
+    if (!facture) throw new Error('Facture introuvable');
+    const updates: Partial<Facture> = { status };
+    if (status !== FactureStatus.PAID) {
+      updates.status_paiement = 'PENDING';
+      updates.date_payee = null;
+    } else {
+      updates.status_paiement = 'PAID';
+      updates.date_payee = new Date();
+    }
+    return this.update(id, updates);
   }
 
   /**
