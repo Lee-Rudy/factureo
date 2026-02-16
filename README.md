@@ -19,3 +19,9 @@ npm run start
 # ou cette commande pour démarrer le serveur
 npx expo start
 
+npm test              # Lance tous les tests
+npm run test:watch    # Mode watch
+npm run test:coverage # Couverture de code
+
+
+Utilisateur de test : test@factureo.com / Test1234!
