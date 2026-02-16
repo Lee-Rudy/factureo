@@ -25,7 +25,7 @@ type Nav = NativeStackNavigationProp<RootStackParamList, 'FacturesList'>;
 const ITEMS_PER_PAGE = 10;
 
 const statusLabels: Record<FactureStatus, string> = {
-  [FactureStatus.DRAFT]: 'Brouillon',
+  [FactureStatus.DRAFT]: 'En attente',
   [FactureStatus.SENT]: 'Envoyée',
   [FactureStatus.PAID]: 'Payée',
   [FactureStatus.OVERDUE]: 'En retard',

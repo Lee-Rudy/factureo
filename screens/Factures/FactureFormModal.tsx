@@ -197,7 +197,7 @@ export default function FactureFormModal({
               />
 
               <Input
-                label="Prix unitaire HT"
+                label="Prix unitaire HT (€)"
                 placeholder="0.00"
                 value={unitaire}
                 onChangeText={setUnitaire}
