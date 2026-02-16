@@ -1,5 +1,12 @@
 /**
  * Écran Dashboard - Tableau de bord
+ * Affichage des élements representés en cards items list
+ * card produits
+ * card clients
+ * devis
+ * factures
+ * tickets supports
+ * actualités
  */
 
 import React, { useState } from 'react';

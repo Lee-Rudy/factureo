@@ -15,7 +15,12 @@ export class Email {
    * LOGIQUE MÉTIER : Validation du format email
    * - Doit contenir un @
    * - Doit avoir un domaine valide
-   * - Format standard RFC 5322 simplifié
+   * - Format standard RFC 5322 simplifié :
+   *    - utilise  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; 
+   * Il vérifie uniquement :
+   *    - pas d’espace
+   *    - un @
+   *    - un point après le domaine
    */
   private validate(email: string): void {
     const trimmedEmail = email.trim();

@@ -13,6 +13,8 @@ export enum FactureStatus {
   CANCELLED = 'CANCELLED',
 }
 
+
+//Class fille
 export interface FactureLine extends LigneDocumentCommercial {}
 
 export interface Facture {
@@ -33,6 +35,7 @@ export interface Facture {
   createdAt: Date;
   updatedAt: Date;
 }
+
 
 export class FactureEntity extends DocumentCommercial implements Facture {
   userId: string;

@@ -14,6 +14,7 @@ export interface Client {
   updatedAt: Date;
 }
 
+
 export class ClientEntity implements Client {
   id: string;
   userId: string;

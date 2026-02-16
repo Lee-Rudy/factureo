@@ -4,7 +4,7 @@
  */
 
 export const fontFamilies = {
-  // Titres - Poppins (temporaire, à remplacer selon les besoins)
+  // Titres - Poppins (temporaire, à remplacer )
   heading: {
     regular: 'System', // Sera remplacé par Poppins-Regular
     medium: 'System', // Sera remplacé par Poppins-Medium

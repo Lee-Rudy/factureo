@@ -1,6 +1,13 @@
 /**
  * Composant DrawerMenu
  * Menu latéral de navigation avec animation
+ * 
+ * Tableau de bord (fonctionnel)
+ * Produits
+ * Clients (fonctionnel)
+ * Devis
+ * Facture (fonctionnel)
+ * Paramètre
  */
 
 import React, { useEffect, useRef } from 'react';

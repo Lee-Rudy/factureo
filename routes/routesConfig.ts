@@ -10,6 +10,8 @@ export type RootStackParamList = {
   RegisterForm: undefined;
   ClientsList: undefined;
   FacturesList: undefined;
+
+  // page: undefined , pour enmpêcher des valeurs et ne pas crasher l'app en runtime (garder undefined)
 };
 
 export const ROUTES = {

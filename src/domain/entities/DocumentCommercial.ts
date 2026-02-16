@@ -14,6 +14,7 @@ export interface LigneDocumentCommercial {
   montant_TTC: number;
 }
 
+// Class Mère
 export abstract class DocumentCommercial {
   id: string;
   numero_document: string;

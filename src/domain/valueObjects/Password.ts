@@ -60,6 +60,7 @@ export class Password {
 
   /**
    * LOGIQUE MÉTIER : Vérification du mot de passe hashé
+   * un stub de cryptographie ou (fake implementation) : hashed_${this.value}
    */
   static async verify(plain: string, hashed: string): Promise<boolean> {
     // Simulation (en production, utiliser bcrypt.compare)

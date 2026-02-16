@@ -1,5 +1,6 @@
 /**
- * Écran d'inscription - Création de compte
+ * Écran d'inscription - Création de compte 
+ * voir RegisterForm pour les détails des 2 étapes sur les formulaires
  */
 
 import React, { useState } from 'react';

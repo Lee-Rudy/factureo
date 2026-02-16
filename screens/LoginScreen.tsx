@@ -1,5 +1,6 @@
 /**
  * Écran de connexion
+ * mail + mdp
  */
 
 import React, { useState } from 'react';

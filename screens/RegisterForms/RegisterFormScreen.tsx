@@ -1,5 +1,7 @@
 /**
  * Formulaire d'inscription en deux étapes
+ * étape 1 : informations personnelles
+ * étape 2 : informations bancaires
  */
 
 import React, { useState } from 'react';
@@ -136,6 +138,7 @@ export default function RegisterFormScreen() {
                     avoirs dès maintenant.
                   </Text>
 
+                  {/* Informations personnelles  */}
                   <Input
                     label="Prénom"
                     placeholder="Votre prénom"
@@ -209,6 +212,8 @@ export default function RegisterFormScreen() {
                 </>
               ) : (
                 <>
+
+                {/* Informations bancaires  */}
                   <Text variant="h4" bold style={styles.sectionTitle}>
                     Informations bancaires
                   </Text>

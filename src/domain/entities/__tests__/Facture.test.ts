@@ -1,5 +1,10 @@
 /**
  * Tests unitaires - Facture Entity
+ * 
+ * 
+ * calculateMontantHT : calcule correctement le montant HT total
+ * calculateMontantTVA :  calcule correctement le montant TVA total
+ * calculateMontantTTC : calcule correctement le montant TTC total
  */
 
 import { FactureEntity, FactureStatus, Facture } from '../Facture';

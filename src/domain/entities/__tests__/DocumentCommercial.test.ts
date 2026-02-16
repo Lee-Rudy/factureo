@@ -1,5 +1,11 @@
 /**
  * Tests unitaires - DocumentCommercial (classe abstraite)
+ * 
+ * 
+ * calculer_totaux :  calcule correctement HT/TVA/TTC avec plusieurs lignes
+ * calculer_totaux : retourne 0 pour tous les montants si aucune ligne
+ * ajouter_ligne : ajoute une ligne et met à jour les totaux
+ * supprimer_ligne :  supprime une ligne et recalcule les totaux
  */
 
 import { DocumentCommercial, LigneDocumentCommercial } from '../DocumentCommercial';
