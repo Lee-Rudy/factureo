@@ -79,10 +79,10 @@ export class FactureUseCases {
 
     // Validation montants lignes
     for (const line of data.lines) {
-      if (line.quantity <= 0) {
+      if (line.quantite <= 0) {
         throw new Error('La quantité doit être supérieure à 0');
       }
-      if (line.unitPrice < 0) {
+      if (line.unitaire < 0) {
         throw new Error('Le prix unitaire ne peut pas être négatif');
       }
     }
@@ -104,8 +104,13 @@ export class FactureUseCases {
   async update(id: string, data: UpdateFactureDTO): Promise<Facture> {
     const facture = await this.getById(id);
 
-    if (facture.status === FactureStatus.PAID && data.status !== FactureStatus.PAID) {
-      throw new Error('Impossible de modifier une facture payée');
+    // Interdit de repasser une facture payée en un autre statut (réversible uniquement via updateStatus)
+    if (
+      facture.status === FactureStatus.PAID &&
+      data.status !== undefined &&
+      data.status !== FactureStatus.PAID
+    ) {
+      throw new Error('Impossible de modifier le statut d\'une facture payée');
     }
 
     return await this.factureRepository.update(id, data);
@@ -132,5 +137,12 @@ export class FactureUseCases {
    */
   async markAsSent(id: string): Promise<Facture> {
     return await this.factureRepository.updateStatus(id, FactureStatus.SENT);
+  }
+
+  /**
+   * LOGIQUE MÉTIER : Changer le statut (réversible : payée ↔ en attente / envoyée)
+   */
+  async updateStatus(id: string, status: FactureStatus): Promise<Facture> {
+    return await this.factureRepository.updateStatus(id, status);
   }
 }

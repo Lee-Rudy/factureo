@@ -14,11 +14,12 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Text, Card, DrawerMenu, SearchBar, Pagination } from '../../components';
 import { colors, spacing } from '../../theme';
 import { useAuth } from '../../src/ui/context/AuthContext';
-import { useFactures, useDeleteFacture, useMarkFactureAsPaid } from '../../src/ui/queries/factures';
+import { useFactures, useDeleteFacture, useUpdateFactureStatus } from '../../src/ui/queries/factures';
 import { useClients } from '../../src/ui/queries/clients';
-import { FactureStatus } from '../../src/domain/entities/Facture';
+import { Facture, FactureStatus } from '../../src/domain/entities/Facture';
 import { RootStackParamList, ROUTES } from '../../routes/routesConfig';
 import FactureFormModal from './FactureFormModal';
+import FactureDetailModal from './FactureDetailModal';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'FacturesList'>;
 
@@ -48,12 +49,15 @@ export default function FacturesListScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [showFormModal, setShowFormModal] = useState(false);
+  const [showDetailModal, setShowDetailModal] = useState(false);
   const [showActionsMenu, setShowActionsMenu] = useState<string | null>(null);
+  const [factureDetail, setFactureDetail] = useState<Facture | null>(null);
+  const [factureToEdit, setFactureToEdit] = useState<Facture | null>(null);
 
   const { data: factures = [], isLoading, error } = useFactures(user?.id || '');
   const { data: clients = [] } = useClients(user?.id || '');
   const deleteFactureMutation = useDeleteFacture();
-  const markAsPaidMutation = useMarkFactureAsPaid();
+  const updateStatusMutation = useUpdateFactureStatus();
 
   /**
    * LOGIQUE MÉTIER : Recherche factures par nom client
@@ -159,16 +163,48 @@ export default function FacturesListScreen() {
     );
   };
 
-  const handleMarkAsPaid = async (factureId: string) => {
+  const handleViewDetail = (facture: Facture) => {
     setShowActionsMenu(null);
-    try {
-      await markAsPaidMutation.mutateAsync({ id: factureId, userId: user!.id });
-      Alert.alert('Succès', 'Facture marquée comme payée');
-    } catch (error) {
-      if (error instanceof Error) {
-        Alert.alert('Erreur', error.message);
-      }
-    }
+    setFactureDetail(facture);
+    setShowDetailModal(true);
+  };
+
+  const handleEditFacture = (facture: Facture) => {
+    setShowActionsMenu(null);
+    setFactureDetail(null);
+    setShowDetailModal(false);
+    setFactureToEdit(facture);
+    setShowFormModal(true);
+  };
+
+  const handleChangeStatus = (facture: Facture) => {
+    setShowActionsMenu(null);
+    const isPaid = facture.status === FactureStatus.PAID;
+    const newStatus = isPaid ? FactureStatus.SENT : FactureStatus.PAID;
+    const message = isPaid
+      ? 'Repasser cette facture en "Envoyée" ?'
+      : 'Marquer cette facture comme payée ?';
+    Alert.alert(
+      'Changer le statut',
+      message,
+      [
+        { text: 'Annuler', style: 'cancel' },
+        {
+          text: 'Confirmer',
+          onPress: async () => {
+            try {
+              await updateStatusMutation.mutateAsync({ id: facture.id, status: newStatus });
+              Alert.alert(
+                'Succès',
+                isPaid ? 'Statut mis à jour (Envoyée)' : 'Facture marquée comme payée'
+              );
+            } catch (e) {
+              if (e instanceof Error) Alert.alert('Erreur', e.message);
+            }
+          },
+        },
+      ]
+    );
   };
 
   const formatDate = (date: Date) => new Date(date).toLocaleDateString('fr-FR');
@@ -298,23 +334,31 @@ export default function FacturesListScreen() {
 
             {showActionsMenu === facture.id && (
               <View style={styles.actionsMenu}>
-                {facture.status !== FactureStatus.PAID && (
-                  <TouchableOpacity
-                    style={styles.actionItem}
-                    onPress={() => handleMarkAsPaid(facture.id)}
-                  >
-                    <Ionicons name="checkmark-circle-outline" size={20} color={colors.success.main} />
-                    <Text variant="body2" style={styles.actionSuccess}>
-                      Marquer comme payée
-                    </Text>
-                  </TouchableOpacity>
-                )}
                 <TouchableOpacity
                   style={styles.actionItem}
-                  onPress={() => {
-                    setShowActionsMenu(null);
-                    Alert.alert('Info', 'Modification facture à implémenter');
-                  }}
+                  onPress={() => handleViewDetail(facture)}
+                >
+                  <Ionicons name="eye-outline" size={20} color={colors.info.main} />
+                  <Text variant="body2" style={styles.actionText}>
+                    Voir le détail
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.actionItem}
+                  onPress={() => handleChangeStatus(facture)}
+                >
+                  <Ionicons
+                    name={facture.status === FactureStatus.PAID ? 'arrow-undo-outline' : 'checkmark-circle-outline'}
+                    size={20}
+                    color={facture.status === FactureStatus.PAID ? colors.warning.main : colors.success.main}
+                  />
+                  <Text variant="body2" style={facture.status === FactureStatus.PAID ? styles.actionWarning : styles.actionSuccess}>
+                    {facture.status === FactureStatus.PAID ? 'Repasser en envoyée' : 'Marquer comme payée'}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.actionItem}
+                  onPress={() => handleEditFacture(facture)}
                 >
                   <Ionicons name="create-outline" size={20} color={colors.info.main} />
                   <Text variant="body2" style={styles.actionText}>
@@ -346,9 +390,33 @@ export default function FacturesListScreen() {
 
       <FactureFormModal
         visible={showFormModal}
-        onClose={() => setShowFormModal(false)}
+        onClose={() => {
+          setShowFormModal(false);
+          setFactureToEdit(null);
+        }}
         userId={user?.id || ''}
         clients={clients}
+        factureToEdit={factureToEdit}
+      />
+
+      <FactureDetailModal
+        visible={showDetailModal}
+        onClose={() => {
+          setShowDetailModal(false);
+          setFactureDetail(null);
+        }}
+        facture={factureDetail}
+        client={factureDetail ? clients.find((c) => c.id === factureDetail.clientId) ?? null : null}
+        onEdit={
+          factureDetail
+            ? () => {
+                setFactureToEdit(factureDetail);
+                setShowDetailModal(false);
+                setFactureDetail(null);
+                setShowFormModal(true);
+              }
+            : undefined
+        }
       />
 
       <DrawerMenu
@@ -472,5 +540,8 @@ const styles = StyleSheet.create({
   },
   actionDelete: {
     color: colors.error.main,
+  },
+  actionWarning: {
+    color: colors.warning.main,
   },
 });
