@@ -20,14 +20,15 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 import { Text, Button, Card, Input, ProgressBar, PhoneInput } from '../../components';
 import { colors, spacing } from '../../theme';
+import { useAuth } from '../../src/ui/context/AuthContext';
 import { RootStackParamList, ROUTES } from '../../routes/routesConfig';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'RegisterForm'>;
 
 export default function RegisterFormScreen() {
   const navigation = useNavigation<Nav>();
+  const { register, isLoading: authLoading } = useAuth();
   const [step, setStep] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -54,15 +55,26 @@ export default function RegisterFormScreen() {
       Alert.alert('Attention', 'Veuillez remplir tous les champs obligatoires.');
       return;
     }
-    setIsLoading(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      Alert.alert('Succès', 'Inscription terminée !');
+      await register({
+        email,
+        password: 'TempPass123!',
+        firstName,
+        lastName,
+        phone,
+        companyName,
+        address,
+        bankName,
+        iban,
+        swift,
+      });
       navigation.navigate(ROUTES.DASHBOARD);
-    } catch {
-      Alert.alert('Erreur', 'Échec de l\'enregistrement.');
-    } finally {
-      setIsLoading(false);
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert('Erreur', error.message);
+      } else {
+        Alert.alert('Erreur', 'Échec de l\'enregistrement.');
+      }
     }
   };
 
@@ -253,8 +265,8 @@ export default function RegisterFormScreen() {
                     variant="tertiary"
                     size="large"
                     fullWidth
-                    loading={isLoading}
-                    disabled={isLoading}
+                    loading={authLoading}
+                    disabled={authLoading}
                     onPress={handleSubmit}
                     style={styles.submitButton}
                   />

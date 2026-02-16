@@ -6,7 +6,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { AuthProvider } from '../contexts/AuthContext';
+import { AppProviders } from '../src/ui/app/AppProviders';
 import { RootStackParamList, ROUTES } from './routesConfig';
 
 // Screens
@@ -15,13 +15,15 @@ import RegisterScreen from '../screens/RegisterScreen';
 import LoginScreen from '../screens/LoginScreen';
 import DashboardScreen from '../screens/DashboardScreen';
 import RegisterFormScreen from '../screens/RegisterForms/RegisterFormScreen';
+import ClientsListScreen from '../screens/ClientsListScreen';
+import FacturesListScreen from '../screens/FacturesListScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function Routes() {
   return (
     <SafeAreaProvider>
-      <AuthProvider>
+      <AppProviders>
         <NavigationContainer>
           <Stack.Navigator
             initialRouteName={ROUTES.AUTH}
@@ -35,9 +37,11 @@ export default function Routes() {
             <Stack.Screen name={ROUTES.LOGIN} component={LoginScreen} />
             <Stack.Screen name={ROUTES.DASHBOARD} component={DashboardScreen} />
             <Stack.Screen name={ROUTES.REGISTER_FORM} component={RegisterFormScreen} />
+            <Stack.Screen name={ROUTES.CLIENTS_LIST} component={ClientsListScreen} />
+            <Stack.Screen name={ROUTES.FACTURES_LIST} component={FacturesListScreen} />
           </Stack.Navigator>
         </NavigationContainer>
-      </AuthProvider>
+      </AppProviders>
     </SafeAreaProvider>
   );
 }

@@ -8,6 +8,8 @@ export type RootStackParamList = {
   Login: undefined;
   Dashboard: undefined;
   RegisterForm: undefined;
+  ClientsList: undefined;
+  FacturesList: undefined;
 };
 
 export const ROUTES = {
@@ -16,4 +18,6 @@ export const ROUTES = {
   LOGIN: 'Login' as const,
   DASHBOARD: 'Dashboard' as const,
   REGISTER_FORM: 'RegisterForm' as const,
+  CLIENTS_LIST: 'ClientsList' as const,
+  FACTURES_LIST: 'FacturesList' as const,
 } as const;

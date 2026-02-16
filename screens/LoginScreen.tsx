@@ -18,7 +18,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 import { Text, Button, Card, Input } from '../components';
 import { colors, spacing } from '../theme';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../src/ui/context/AuthContext';
 import { RootStackParamList, ROUTES } from '../routes/routesConfig';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'Login'>;

@@ -18,7 +18,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Text, Button, Card, Input, Checkbox } from '../components';
 import { colors, spacing } from '../theme';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../src/ui/context/AuthContext';
 import { RootStackParamList } from '../routes/routesConfig';
 import { ROUTES } from '../routes/routesConfig';
 
