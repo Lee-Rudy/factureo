@@ -25,7 +25,7 @@ type Nav = NativeStackNavigationProp<RootStackParamList, 'FacturesList'>;
 const ITEMS_PER_PAGE = 10;
 
 const statusLabels: Record<FactureStatus, string> = {
-  [FactureStatus.DRAFT]: 'Brouillon',
+  [FactureStatus.DRAFT]: 'En attente',
   [FactureStatus.SENT]: 'Envoyée',
   [FactureStatus.PAID]: 'Payée',
   [FactureStatus.OVERDUE]: 'En retard',
@@ -248,7 +248,7 @@ export default function FacturesListScreen() {
           <Card key={facture.id} variant="elevated" elevation="none" padding="medium" style={styles.card}>
             <View style={styles.factureHeader}>
               <View style={styles.factureTitle}>
-                <Ionicons name="document-text" size={28} color={colors.tertiary.main} />
+                <Ionicons name="document-text" size={28} color={colors.primary.dark} />
                 <View>
                   <Text variant="h4" bold>
                     {facture.numero}
@@ -289,10 +289,10 @@ export default function FacturesListScreen() {
                 </Text>
               </View>
               <View style={styles.infoRow}>
-                <Ionicons name="cash-outline" size={16} color={colors.primary.main} />
-                <Text variant="body1" bold style={styles.montant}>
-                  {formatMontant(facture.montantTTC)}
-                </Text>
+                <Ionicons name="cash-outline" size={16} color={colors.primary.dark} />
+                <Text variant="body1" bold color="secondary" style={styles.montant}>
+                {formatMontant(facture.montantTTC)}
+              </Text>
               </View>
             </View>
 
@@ -450,9 +450,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.sm,
   },
-  montant: {
-    color: colors.primary.main,
-  },
+  montant: {},
   actionsMenu: {
     marginTop: spacing.base,
     paddingTop: spacing.base,

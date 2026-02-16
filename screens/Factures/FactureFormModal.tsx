@@ -197,7 +197,7 @@ export default function FactureFormModal({
               />
 
               <Input
-                label="Prix unitaire HT"
+                label="Prix unitaire HT (€)"
                 placeholder="0.00"
                 value={unitaire}
                 onChangeText={setUnitaire}
@@ -220,7 +220,7 @@ export default function FactureFormModal({
 
               <Button
                 title="Créer la facture"
-                variant="tertiary"
+                variant="gradient"
                 size="large"
                 fullWidth
                 loading={createFactureMutation.isPending}
@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   submitButton: {
-    marginTop: 1,
+    marginTop: 10,
     marginBottom: 5,
   },
   pickerOverlay: {

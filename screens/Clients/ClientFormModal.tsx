@@ -165,7 +165,7 @@ export default function ClientFormModal({
 
               <Button
                 title={isEditing ? 'Enregistrer les modifications' : 'Créer le client'}
-                variant="tertiary"
+                variant="gradient"
                 size="large"
                 fullWidth
                 loading={isLoading}

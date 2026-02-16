@@ -54,7 +54,7 @@ export default function AuthScreen() {
           <View style={styles.buttonSection}>
             <Button
               title="CRÉER UN COMPTE"
-              variant="primary"
+              variant="tertiary"
               size="large"
               fullWidth
               onPress={handleCreateAccount}
