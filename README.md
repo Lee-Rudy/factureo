@@ -13,9 +13,18 @@ npm install
 
 ### Lancement
 
-# Démarrer le serveur
-npm run start
+npm start             # Serveur de dev
+npm test              # Lance tous les tests
+npm run test:watch    # Mode watch
+npm run test:coverage # Couverture de code
 
-# ou cette commande pour démarrer le serveur
-npx expo start
+### Docker
 
+docker-compose up --build   # Lancer avec Docker
+docker-compose down         # Arreter
+
+Voir DOCKER_SETUP.txt et INSTALLATION.txt pour details complets
+
+### Utilisateur de test
+
+test@factureo.com / Test1234!

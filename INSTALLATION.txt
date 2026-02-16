@@ -1,0 +1,154 @@
+================================================================
+  FACTUREO - INSTRUCTIONS D'INSTALLATION
+================================================================
+
+INSTALLATION LOCALE (Sans Docker)
+----------------------------------
+
+1. Prerequis
+   - Node.js 18+ installe
+   - npm ou yarn
+   - Expo Go sur votre telephone
+
+2. Installation des dependances
+   npm install
+
+3. Lancement du serveur de developpement
+   npm start
+
+4. Scanner le QR code avec Expo Go
+
+5. Lancer les tests
+   npm test
+
+
+INSTALLATION AVEC DOCKER (Recommande)
+--------------------------------------
+
+1. Prerequis
+   - Docker Desktop installe et lance
+   - Expo Go sur votre telephone
+
+2. Construction et lancement
+   docker-compose up --build
+
+3. Scanner le QR code affiche dans le terminal
+
+4. L'application se lance automatiquement
+
+
+LANCEMENT DES TESTS
+--------------------
+
+# Sans Docker
+npm test
+npm run test:watch
+npm run test:coverage
+
+# Avec Docker
+docker-compose --profile tests run --rm factureo-tests
+
+
+VERIFICATION DE L'INSTALLATION
+-------------------------------
+
+1. Le serveur Expo doit afficher :
+   - Metro waiting on exp://...
+   - QR code visible
+   - Aucune erreur
+
+2. Scanner le QR code avec Expo Go
+
+3. L'ecran d'authentification doit apparaitre
+
+4. Se connecter avec :
+   Email: test@factureo.com
+   Password: Test1234!
+
+5. Le dashboard doit afficher :
+   - 5 clients
+   - 2 factures
+   - Menu de navigation fonctionnel
+
+
+STRUCTURE DU PROJET
+-------------------
+
+factureo/
+├── src/
+│   ├── domain/           # Entites et logique metier
+│   ├── application/      # Use Cases
+│   ├── infrastructure/   # HashMap (InMemory)
+│   └── ui/              # Context + TanStack Query
+├── screens/             # Ecrans React Native
+├── components/          # Composants UI
+├── theme/              # Design system
+├── routes/             # Navigation
+├── Dockerfile          # Configuration Docker
+└── docker-compose.yml  # Orchestration Docker
+
+
+FONCTIONNALITES DISPONIBLES
+----------------------------
+
+1. Authentification
+   - Login / Register
+   - Validation email et mot de passe fort
+   - Session utilisateur
+
+2. Gestion Clients (CRUD)
+   - Liste avec recherche et pagination
+   - Ajout / Modification / Suppression
+   - 5 clients fictifs
+
+3. Gestion Factures (CRUD)
+   - Liste avec recherche et pagination
+   - Creation avec selection client
+   - Marquer comme payee
+   - Calcul automatique HT/TVA/TTC
+   - 2 factures fictives
+
+4. Dashboard
+   - Vue d'ensemble
+   - Statistiques temps reel
+   - Acces rapide aux sections
+
+5. Tests Unitaires
+   - 48 tests automatises
+   - Couverture logique metier
+   - Validation Value Objects
+
+
+PORTS UTILISES
+--------------
+
+8081  - Metro Bundler
+19000 - Expo DevTools
+19001 - Expo Dev Server
+19002 - Expo Dev Server (Android)
+
+
+EN CAS DE PROBLEME
+------------------
+
+1. Verifier Node.js est installe : node --version
+2. Verifier Docker est lance (si utilise)
+3. Supprimer node_modules et reinstaller : rm -rf node_modules && npm install
+4. Nettoyer le cache Expo : npx expo start -c
+5. Verifier aucun autre service n'utilise les ports 8081, 19000-19002
+
+
+CONTACT UTILISATEUR DE TEST
+---------------------------
+
+Email    : test@factureo.com
+Password : Test1234!
+
+Apres connexion, vous pouvez :
+- Consulter les 5 clients existants
+- Voir les 2 factures
+- Creer de nouveaux clients
+- Creer des factures
+- Tester toutes les operations CRUD
+
+================================================================
