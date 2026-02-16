@@ -118,7 +118,7 @@ export default function LoginScreen() {
 
               <Button
                 title="Se connecter"
-                variant="primary"
+                variant="gradient"
                 size="large"
                 fullWidth
                 loading={isLoading}

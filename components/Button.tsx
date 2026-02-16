@@ -11,10 +11,11 @@ import {
   ActivityIndicator,
   View,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Text } from './Text';
 import { colors, spacing, borderRadius, heights } from '../theme';
 
-type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'outline' | 'ghost';
+type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'outline' | 'ghost' | 'gradient';
 type ButtonSize = 'small' | 'medium' | 'large';
 
 export interface ButtonProps extends TouchableOpacityProps {
@@ -64,6 +65,7 @@ export const Button: React.FC<ButtonProps> = ({
         return colors.secondary.main;
       case 'tertiary':
         return colors.tertiary.main;
+      case 'gradient':
       case 'outline':
       case 'ghost':
         return 'transparent';
@@ -80,6 +82,7 @@ export const Button: React.FC<ButtonProps> = ({
       case 'primary':
       case 'secondary':
       case 'tertiary':
+      case 'gradient':
         return colors.text.inverse;
       case 'outline':
         return colors.primary.main;
@@ -117,24 +120,8 @@ export const Button: React.FC<ButtonProps> = ({
   const hasBorder = variant === 'outline';
   const finalBorderColor = customBorderColor || colors.primary.main;
 
-  return (
-    <TouchableOpacity
-      disabled={disabled || loading}
-      style={[
-        styles.container,
-        {
-          backgroundColor: getBackgroundColor(),
-          height: getHeight(),
-          paddingHorizontal: getPaddingHorizontal(),
-        },
-        hasBorder && { ...styles.outlined, borderColor: finalBorderColor },
-        fullWidth && styles.fullWidth,
-        (disabled || loading) && styles.disabled,
-        style,
-      ]}
-      activeOpacity={0.7}
-      {...props}
-    >
+  const buttonContent = (
+    <>
       {loading ? (
         <ActivityIndicator color={getTextColor()} />
       ) : (
@@ -157,6 +144,50 @@ export const Button: React.FC<ButtonProps> = ({
           {rightIcon && <View style={styles.iconRight}>{rightIcon}</View>}
         </View>
       )}
+    </>
+  );
+
+  const containerStyle = [
+    styles.container,
+    {
+      backgroundColor: getBackgroundColor(),
+      height: getHeight(),
+      paddingHorizontal: getPaddingHorizontal(),
+    },
+    hasBorder && { ...styles.outlined, borderColor: finalBorderColor },
+    fullWidth && styles.fullWidth,
+    (disabled || loading) && styles.disabled,
+    variant === 'gradient' && styles.gradientOverflow,
+    style,
+  ];
+
+  if (variant === 'gradient') {
+    return (
+      <TouchableOpacity
+        disabled={disabled || loading}
+        style={[containerStyle, { overflow: 'hidden' }]}
+        activeOpacity={0.7}
+        {...props}
+      >
+        <LinearGradient
+          colors={[colors.background.gradient.start, colors.background.gradient.end]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={StyleSheet.absoluteFill}
+        />
+        {buttonContent}
+      </TouchableOpacity>
+    );
+  }
+
+  return (
+    <TouchableOpacity
+      disabled={disabled || loading}
+      style={containerStyle}
+      activeOpacity={0.7}
+      {...props}
+    >
+      {buttonContent}
     </TouchableOpacity>
   );
 };
@@ -167,6 +198,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
+  },
+  gradientOverflow: {
+    overflow: 'hidden',
   },
   content: {
     flexDirection: 'row',

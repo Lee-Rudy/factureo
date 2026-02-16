@@ -220,7 +220,7 @@ export default function FactureFormModal({
 
               <Button
                 title="Créer la facture"
-                variant="tertiary"
+                variant="gradient"
                 size="large"
                 fullWidth
                 loading={createFactureMutation.isPending}

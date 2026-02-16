@@ -112,7 +112,7 @@ export default function RegisterScreen() {
 
               <Button
                 title="Créer un compte"
-                variant="primary"
+                variant="gradient"
                 size="large"
                 fullWidth
                 loading={isLoading}
