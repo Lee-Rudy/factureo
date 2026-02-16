@@ -5,7 +5,7 @@ Application mobile de gestion de factures développée avec React Native, Expo e
 # Description du projet 
 Factureo est une application mobile de gestion comptable centralisée. L'objectif est de
 simplifier la vie des entrepreneurs face à la réforme de la facture électronique de septembre
-2026.
+2026
 
 ### Installation
 

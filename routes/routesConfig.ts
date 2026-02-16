@@ -4,13 +4,16 @@
 
 export type RootStackParamList = {
   Auth: undefined;
-  // Ajoutez vos nouvelles routes ici
-  // Example: Home: undefined;
-  // Example: Profile: { userId: string };
+  Register: undefined;
+  Login: undefined;
+  Dashboard: undefined;
+  RegisterForm: undefined;
 };
 
 export const ROUTES = {
   AUTH: 'Auth' as const,
-  // Ajoutez vos nouvelles routes ici
-  // Example: HOME: 'Home' as const,
+  REGISTER: 'Register' as const,
+  LOGIN: 'Login' as const,
+  DASHBOARD: 'Dashboard' as const,
+  REGISTER_FORM: 'RegisterForm' as const,
 } as const;
