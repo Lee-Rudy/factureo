@@ -248,7 +248,7 @@ export default function FacturesListScreen() {
           <Card key={facture.id} variant="elevated" elevation="none" padding="medium" style={styles.card}>
             <View style={styles.factureHeader}>
               <View style={styles.factureTitle}>
-                <Ionicons name="document-text" size={28} color={colors.tertiary.main} />
+                <Ionicons name="document-text" size={28} color={colors.primary.dark} />
                 <View>
                   <Text variant="h4" bold>
                     {facture.numero}

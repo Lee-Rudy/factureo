@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   submitButton: {
-    marginTop: 1,
+    marginTop: 10,
     marginBottom: 5,
   },
   pickerOverlay: {

@@ -221,7 +221,7 @@ export default function ClientsListScreen() {
           <Card key={client.id} variant="elevated" elevation="none" padding="medium" style={styles.card}>
             <View style={styles.clientHeader}>
               <View style={styles.clientTitle}>
-                <Ionicons name="person-circle-outline" size={32} color={colors.tertiary.main} />
+                <Ionicons name="person-circle-outline" size={32} color={colors.primary.dark} />
                 <View style={styles.clientName}>
                   <Text variant="h4" bold>
                     {client.prenom} {client.nom}
