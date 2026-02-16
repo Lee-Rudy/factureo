@@ -1,0 +1,305 @@
+================================================================
+  FACTUREO - CONFIGURATION DOCKER
+================================================================
+
+PREREQUIS
+---------
+- Docker Desktop installe et lance
+- Git (pour cloner le projet)
+- Expo Go installe sur votre telephone (iOS/Android)
+
+================================================================
+INSTALLATION ET LANCEMENT
+================================================================
+
+METHODE 1 : LANCEMENT RAPIDE
+-----------------------------
+première fois :
+
+docker compose up --build
+
+deuxième fois et autre fois : 
+docker compose up
+
+stopper docker : 
+docker compose down
+
+en cas de changement de dépendances :
+docker compose up --build
+
+1. Cloner le projet (si pas encore fait)
+   git clone <url-du-repo>
+   cd factureo
+
+2. Construire et lancer le conteneur
+   docker-compose up --build
+
+3. Scanner le QR code avec Expo Go sur votre telephone
+
+4. L'application se lance automatiquement
+
+
+METHODE 2 : COMMANDES DETAILLEES
+---------------------------------
+
+1. Construire l'image Docker
+   docker-compose build
+
+2. Lancer le serveur de developpement
+   docker-compose up
+
+3. Arreter le serveur
+   docker-compose down
+
+4. Relancer avec cache propre
+   docker-compose up --build --force-recreate
+
+
+================================================================
+COMMANDES DOCKER UTILES
+================================================================
+
+SERVEUR DE DEVELOPPEMENT
+-------------------------
+# Lancer le serveur
+docker-compose up
+
+# Lancer en arriere-plan (detached)
+docker-compose up -d
+
+# Voir les logs
+docker-compose logs -f
+
+# Arreter le serveur
+docker-compose down
+
+
+TESTS UNITAIRES
+---------------
+# Lancer tous les tests
+docker-compose --profile tests run --rm factureo-tests
+
+# Lancer les tests en mode watch
+docker-compose run --rm factureo-app npm run test:watch
+
+# Lancer avec couverture
+docker-compose run --rm factureo-app npm run test:coverage
+
+
+GESTION DES DEPENDANCES
+------------------------
+# Installer une nouvelle dependance
+docker-compose run --rm factureo-app npm install <package-name>
+
+# Reinstaller toutes les dependances
+docker-compose run --rm factureo-app npm install
+
+
+MAINTENANCE
+-----------
+# Reconstruire l'image apres modification package.json
+docker-compose build
+
+# Nettoyer les conteneurs et volumes
+docker-compose down -v
+
+# Supprimer l'image
+docker rmi factureo-app
+
+
+================================================================
+PUBLIER SUR DOCKER HUB
+================================================================
+
+ETAPE 1 : CREER UN COMPTE DOCKER HUB
+-------------------------------------
+1. Aller sur https://hub.docker.com
+2. Creer un compte gratuit
+3. Noter votre username Docker Hub
+
+
+ETAPE 2 : CONSTRUIRE L'IMAGE
+-----------------------------
+# Remplacer <votre-username> par votre username Docker Hub
+docker build -t <votre-username>/factureo:latest .
+
+Exemple :
+docker build -t johndoe/factureo:latest .
+
+
+ETAPE 3 : SE CONNECTER A DOCKER HUB
+------------------------------------
+docker login
+
+# Entrer votre username et password Docker Hub
+
+
+ETAPE 4 : POUSSER L'IMAGE
+--------------------------
+docker push <votre-username>/factureo:latest
+
+Exemple :
+docker push johndoe/factureo:latest
+
+
+ETAPE 5 : PARTAGER L'IMAGE
+---------------------------
+Donnez a vos testeurs la commande suivante :
+
+docker pull <votre-username>/factureo:latest
+docker run -p 8081:8081 -p 19000:19000 -p 19001:19001 -p 19002:19002 <votre-username>/factureo:latest
+
+
+================================================================
+UTILISATION PAR LES TESTEURS
+================================================================
+
+METHODE SIMPLE (Image Docker Hub)
+----------------------------------
+1. Installer Docker Desktop
+
+2. Telecharger l'image
+   docker pull <votre-username>/factureo:latest
+
+3. Lancer le conteneur
+   docker run -p 8081:8081 -p 19000:19000 -p 19001:19001 -p 19002:19002 <votre-username>/factureo:latest
+
+4. Scanner le QR code avec Expo Go
+
+5. Tester l'application
+
+
+METHODE AVEC DOCKER COMPOSE (Si projet clone)
+----------------------------------------------
+1. Cloner le projet
+   git clone <url-du-repo>
+   cd factureo
+
+2. Lancer
+   docker-compose up
+
+3. Scanner le QR code avec Expo Go
+
+4. Tester l'application
+
+
+================================================================
+ACCES A L'APPLICATION
+================================================================
+
+Une fois le conteneur lance :
+
+1. EXPO DEVTOOLS
+   Ouvrir http://localhost:19002 dans le navigateur
+
+2. METRO BUNDLER
+   Accessible sur http://localhost:8081
+
+3. QR CODE
+   Scanner le QR code affiche dans le terminal avec Expo Go
+
+4. LOGS
+   Visibles dans le terminal Docker
+
+
+================================================================
+PORTS UTILISES
+================================================================
+
+8081  - Metro Bundler (serveur de dev React Native)
+19000 - Expo DevTools (interface web)
+19001 - Expo Dev Server
+19002 - Expo Dev Server (Android)
+
+
+================================================================
+DONNEES DE TEST
+================================================================
+
+COMPTE UTILISATEUR DE TEST
+---------------------------
+Email    : test@factureo.com
+Password : Test1234!
+
+CLIENTS FICTIFS (5)
+-------------------
+1. Jean Dupont - Paris
+2. Marie Martin - Lyon
+3. Pierre Bernard - Bordeaux
+4. Sophie Dubois - Nantes
+5. Thomas Petit - Marseille
+
+FACTURES FICTIVES (2)
+---------------------
+1. FAC-2024-001 - Jean Dupont - 6000 EUR (Payee)
+2. FAC-2024-002 - Marie Martin - 900 EUR (Envoyee)
+
+
+================================================================
+TROUBLESHOOTING
+================================================================
+
+PROBLEME : Le QR code ne s'affiche pas
+SOLUTION : Verifier que les ports sont bien exposes et non utilises
+
+PROBLEME : Cannot connect to Metro Bundler
+SOLUTION : Redemarrer le conteneur avec docker-compose restart
+
+PROBLEME : Module not found
+SOLUTION : Reconstruire l'image
+   docker-compose down
+   docker-compose build --no-cache
+   docker-compose up
+
+PROBLEME : Permission denied
+SOLUTION : Lancer Docker Desktop en tant qu'administrateur (Windows)
+
+PROBLEME : L'app ne se connecte pas depuis le telephone
+SOLUTION : S'assurer que le telephone et l'ordinateur sont sur le meme reseau WiFi
+
+
+================================================================
+COMMANDES RAPIDES
+================================================================
+
+# Tout en une commande - Installation et lancement
+docker-compose up --build
+
+# Lancer les tests
+docker-compose --profile tests run --rm factureo-tests
+
+# Arreter et nettoyer
+docker-compose down -v
+
+# Publier sur Docker Hub (apres build)
+docker login
+docker tag factureo-app <username>/factureo:latest
+docker push <username>/factureo:latest
+
+
+================================================================
+ARCHITECTURE DU PROJET
+================================================================
+
+Le projet utilise :
+- React Native + Expo
+- TypeScript
+- Architecture Hexagonale (Domain-Driven Design)
+- Context API + TanStack Query
+- HashMap pour simulation base de donnees
+- Jest pour tests unitaires
+
+Tous les services sont conteneurises et prets a l'emploi.
+
+
+================================================================
+SUPPORT
+================================================================
+
+En cas de probleme :
+1. Consulter les logs : docker-compose logs -f
+2. Verifier Docker Desktop est lance
+3. Verifier les ports sont disponibles
+4. Reconstruire l'image si necessaire
+
+================================================================

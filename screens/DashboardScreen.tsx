@@ -1,5 +1,12 @@
 /**
  * Écran Dashboard - Tableau de bord
+ * Affichage des élements representés en cards items list
+ * card produits
+ * card clients
+ * devis
+ * factures
+ * tickets supports
+ * actualités
  */
 
 import React, { useState } from 'react';
@@ -12,7 +19,9 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Text, Card, DrawerMenu } from '../components';
 import { colors, spacing } from '../theme';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../src/ui/context/AuthContext';
+import { useClients } from '../src/ui/queries/clients';
+import { useFactures } from '../src/ui/queries/factures';
 import { RootStackParamList, ROUTES } from '../routes/routesConfig';
 
 interface DashboardItemProps {
@@ -91,6 +100,9 @@ export default function DashboardScreen() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [headerHeight, setHeaderHeight] = useState(0);
 
+  const { data: clients = [] } = useClients(user?.id || '');
+  const { data: factures = [] } = useFactures(user?.id || '');
+
   const menuItems = [
     {
       icon: 'home-outline' as const,
@@ -105,7 +117,10 @@ export default function DashboardScreen() {
     {
       icon: 'people-outline' as const,
       label: 'Clients',
-      onPress: () => {},
+      onPress: () => {
+        setIsDrawerOpen(false);
+        navigation.navigate(ROUTES.CLIENTS_LIST);
+      },
     },
     {
       icon: 'document-text-outline' as const,
@@ -117,7 +132,10 @@ export default function DashboardScreen() {
       icon: 'receipt-outline' as const,
       label: 'Facture',
       hasDropdown: true,
-      onPress: () => {},
+      onPress: () => {
+        setIsDrawerOpen(false);
+        navigation.navigate(ROUTES.FACTURES_LIST);
+      },
     },
     {
       icon: 'settings-outline' as const,
@@ -184,11 +202,14 @@ export default function DashboardScreen() {
 
         <DashboardItem
           title="Clients"
-          count="1 Client(s)"
+          count={`${clients.length} Client(s)`}
           icon="people-outline"
-          recentItems={[{ label: 'Moocles', value: 'Iden :R\nxxxx xxxx xxx' }]}
+          recentItems={clients.slice(0, 2).map((c) => ({
+            label: `${c.prenom} ${c.nom}`,
+            value: `${c.email}\n${c.phone}`,
+          }))}
           linkText="Voir tous les clients"
-          onLinkPress={() => {}}
+          onLinkPress={() => navigation.navigate(ROUTES.CLIENTS_LIST)}
         />
 
         <DashboardItem
@@ -202,11 +223,15 @@ export default function DashboardScreen() {
 
         <DashboardItem
           title="Facture"
-          count="0 Facture"
+          count={`${factures.length} Facture${factures.length > 1 ? 's' : ''}`}
           icon="receipt-outline"
+          recentItems={factures.slice(0, 2).map((f) => ({
+            label: f.numero,
+            value: `${f.montantTTC.toFixed(2)} €\n${new Date(f.dateEmission).toLocaleDateString('fr-FR')}`,
+          }))}
           emptyText=""
           linkText="Voir tous les factures"
-          onLinkPress={() => {}}
+          onLinkPress={() => navigation.navigate(ROUTES.FACTURES_LIST)}
         />
 
         <DashboardItem
@@ -267,7 +292,7 @@ export default function DashboardScreen() {
       <DrawerMenu
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
-        userName={user?.name || 'Heritsilavina RAZAFIARISON'}
+        userName={user ? `${user.firstName} ${user.lastName}` : 'Heritsilavina RAZAFIARISON'}
         userRole="Gestionnaire de flotte"
         menuItems={menuItems}
         onLogout={handleLogout}

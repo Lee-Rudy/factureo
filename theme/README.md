@@ -1,10 +1,10 @@
 # Design System - Factureo
 
-## 📋 Vue d'ensemble
+## Vue d'ensemble global
 
 Ce design system fournit une base cohérente pour le développement de l'application Factureo. Il comprend les couleurs, la typographie, les espacements, et les règles de layout.
 
-## 🎨 Couleurs
+## Couleurs
 
 ### Palette principale
 
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
 </GradientBackground>
 ```
 
-## 📝 Typographie
+## Typographie
 
 ### Variantes disponibles
 
@@ -73,9 +73,9 @@ interface TextProps {
 }
 ```
 
-## 📏 Spacing
+## Spacing ou espacement
 
-### Échelle d'espacement (base 4px)
+### Échelle d'espacement (base 4px) : ajoute +4px à chaque niveau
 
 ```typescript
 import { spacing } from './theme';
@@ -112,7 +112,7 @@ semanticSpacing.elementSpacing.relaxed       // 20px
 semanticSpacing.elementSpacing.loose         // 32px
 ```
 
-## 🎭 Layout
+## Layout
 
 ### Border Radius
 
@@ -153,7 +153,7 @@ heights.input.medium   // 44px
 heights.input.large    // 56px
 ```
 
-## 🧩 Composants
+## Composants
 
 ### GradientBackground
 
@@ -208,7 +208,7 @@ import { Text } from './components';
 </Text>
 ```
 
-## 📱 Exemple d'utilisation complète
+## Exemple d'utilisation complète
 
 ```typescript
 import { SafeAreaView, View, StyleSheet } from 'react-native';
@@ -253,17 +253,3 @@ const styles = StyleSheet.create({
   },
 });
 ```
-
-## 🎯 Bonnes pratiques
-
-1. **Toujours utiliser les tokens du design system** plutôt que des valeurs en dur
-2. **Privilégier les espacements sémantiques** pour une cohérence
-3. **Utiliser les composants fournis** (Text, Button, etc.) au lieu des composants natifs
-4. **Respecter la hiérarchie typographique** (h1 > h2 > h3, etc.)
-5. **Utiliser les couleurs appropriées** selon le contexte (primary, secondary, etc.)
-
-## 🔄 Évolution
-
-Ce design system est évolutif. Les polices Inter et Poppins actuelles sont temporaires et seront remplacées par les polices définitives du projet.
-
-Pour ajouter de nouvelles variantes ou composants, suivez la structure existante et maintenez la cohérence avec le système actuel.

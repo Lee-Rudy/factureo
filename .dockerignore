@@ -1,0 +1,42 @@
+# Node
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Expo
+.expo
+.expo-shared
+dist
+
+# Tests
+coverage
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Git
+.git
+.gitignore
+
+# Env (ne pas embarquer de secrets)
+.env
+.env.*
+
+# Documentation
+*.md
+!README.md
+
+# Logs
+logs
+*.log
+
+# Build
+build
+.cache
