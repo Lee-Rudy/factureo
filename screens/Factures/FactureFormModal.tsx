@@ -185,29 +185,27 @@ export default function FactureFormModal({
                 style={styles.input}
               />
 
-              <View style={styles.row}>
-                <Input
-                  label="Quantité"
-                  placeholder="1"
-                  value={quantite}
-                  onChangeText={setQuantite}
-                  keyboardType="numeric"
-                  variant="outlined"
-                  required
-                  style={styles.halfInput}
-                />
+              <Input
+                label="Quantité"
+                placeholder="1"
+                value={quantite}
+                onChangeText={setQuantite}
+                keyboardType="numeric"
+                variant="outlined"
+                required
+                style={styles.input}
+              />
 
-                <Input
-                  label="Prix unitaire HT"
-                  placeholder="0.00"
-                  value={unitaire}
-                  onChangeText={setUnitaire}
-                  keyboardType="numeric"
-                  variant="outlined"
-                  required
-                  style={styles.halfInput}
-                />
-              </View>
+              <Input
+                label="Prix unitaire HT"
+                placeholder="0.00"
+                value={unitaire}
+                onChangeText={setUnitaire}
+                keyboardType="numeric"
+                variant="outlined"
+                required
+                style={styles.input}
+              />
 
               <Input
                 label="TVA (%)"
@@ -295,7 +293,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   modalKeyboard: {
-    maxHeight: '95%',
+    maxHeight: '100%',
   },
   modalContent: {
     backgroundColor: colors.surface.primary,
@@ -313,6 +311,7 @@ const styles = StyleSheet.create({
   },
   modalBody: {
     padding: spacing.xl,
+    paddingBottom: spacing['3xl'],
   },
   sectionTitle: {
     marginBottom: spacing.md,
@@ -331,7 +330,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   input: {
-    marginBottom: 12,
+    marginBottom: 5,
   },
   row: {
     flexDirection: 'row',
@@ -342,10 +341,11 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   inputLast: {
-    marginBottom: 20,
+    marginBottom: 5,
   },
   submitButton: {
-    marginTop: 10,
+    marginTop: 1,
+    marginBottom: 5,
   },
   pickerOverlay: {
     flex: 1,

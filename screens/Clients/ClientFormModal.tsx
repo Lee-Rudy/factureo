@@ -208,10 +208,10 @@ const styles = StyleSheet.create({
     padding: spacing.xl,
   },
   input: {
-    marginBottom: 12,
+    marginBottom: 5,
   },
   inputLast: {
-    marginBottom: 20,
+    marginBottom: 5,
   },
   submitButton: {
     marginTop: 10,
