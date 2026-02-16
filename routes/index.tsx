@@ -15,8 +15,8 @@ import RegisterScreen from '../screens/RegisterScreen';
 import LoginScreen from '../screens/LoginScreen';
 import DashboardScreen from '../screens/DashboardScreen';
 import RegisterFormScreen from '../screens/RegisterForms/RegisterFormScreen';
-import ClientsListScreen from '../screens/ClientsListScreen';
-import FacturesListScreen from '../screens/FacturesListScreen';
+import ClientsListScreen from '../screens/Clients/ClientsListScreen';
+import FacturesListScreen from '../screens/Factures/FacturesListScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 

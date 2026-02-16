@@ -7,19 +7,19 @@ import { Client } from '../../../domain/entities/Client';
 
 export interface CreateClientDTO {
   userId: string;
-  name: string;
+  prenom: string;
+  nom: string;
   email: string;
   phone: string;
-  address: string;
-  siret?: string;
+  adress: string;
 }
 
 export interface UpdateClientDTO {
-  name?: string;
+  prenom?: string;
+  nom?: string;
   email?: string;
   phone?: string;
-  address?: string;
-  siret?: string;
+  adress?: string;
 }
 
 export class ClientUseCases {
@@ -30,6 +30,24 @@ export class ClientUseCases {
    */
   async list(userId: string): Promise<Client[]> {
     return await this.clientRepository.findByUserId(userId);
+  }
+
+  /**
+   * LOGIQUE MÉTIER : Recherche clients par nom/prénom
+   * Insensible à la casse
+   */
+  async search(userId: string, query: string): Promise<Client[]> {
+    const allClients = await this.clientRepository.findByUserId(userId);
+    const searchLower = query.toLowerCase().trim();
+
+    if (!searchLower) return allClients;
+
+    return allClients.filter(
+      (client) =>
+        client.prenom.toLowerCase().includes(searchLower) ||
+        client.nom.toLowerCase().includes(searchLower) ||
+        `${client.prenom} ${client.nom}`.toLowerCase().includes(searchLower)
+    );
   }
 
   /**
@@ -46,15 +64,23 @@ export class ClientUseCases {
   /**
    * LOGIQUE MÉTIER : Création client
    * - Validation email dans le repository
-   * - Vérification nom non vide
+   * - Vérification nom et prénom non vides
    */
   async create(data: CreateClientDTO): Promise<Client> {
-    if (!data.name.trim()) {
+    if (!data.prenom.trim()) {
+      throw new Error('Le prénom du client est obligatoire');
+    }
+
+    if (!data.nom.trim()) {
       throw new Error('Le nom du client est obligatoire');
     }
 
     if (!data.phone.trim()) {
       throw new Error('Le téléphone est obligatoire');
+    }
+
+    if (!data.adress.trim()) {
+      throw new Error('L\'adresse est obligatoire');
     }
 
     return await this.clientRepository.create(data);
@@ -65,8 +91,12 @@ export class ClientUseCases {
    * - Validation données si modifiées
    */
   async update(id: string, data: UpdateClientDTO): Promise<Client> {
-    if (data.name !== undefined && !data.name.trim()) {
-      throw new Error('Le nom du client ne peut pas être vide');
+    if (data.prenom !== undefined && !data.prenom.trim()) {
+      throw new Error('Le prénom ne peut pas être vide');
+    }
+
+    if (data.nom !== undefined && !data.nom.trim()) {
+      throw new Error('Le nom ne peut pas être vide');
     }
 
     return await this.clientRepository.update(id, data);

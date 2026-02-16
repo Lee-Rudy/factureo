@@ -5,11 +5,11 @@
 export interface Client {
   id: string;
   userId: string;
-  name: string;
+  prenom: string;
+  nom: string;
   email: string;
   phone: string;
-  address: string;
-  siret?: string;
+  adress: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -17,24 +17,28 @@ export interface Client {
 export class ClientEntity implements Client {
   id: string;
   userId: string;
-  name: string;
+  prenom: string;
+  nom: string;
   email: string;
   phone: string;
-  address: string;
-  siret?: string;
+  adress: string;
   createdAt: Date;
   updatedAt: Date;
 
   constructor(data: Client) {
     this.id = data.id;
     this.userId = data.userId;
-    this.name = data.name;
+    this.prenom = data.prenom;
+    this.nom = data.nom;
     this.email = data.email;
     this.phone = data.phone;
-    this.address = data.address;
-    this.siret = data.siret;
+    this.adress = data.adress;
     this.createdAt = data.createdAt;
     this.updatedAt = data.updatedAt;
+  }
+
+  get fullName(): string {
+    return `${this.prenom} ${this.nom}`;
   }
 
   update(updates: Partial<Client>): ClientEntity {

@@ -12,3 +12,5 @@ export { Checkbox } from './Checkbox';
 export { DrawerMenu } from './DrawerMenu';
 export { ProgressBar } from './ProgressBar';
 export { PhoneInput } from './PhoneInput';
+export { SearchBar } from './SearchBar';
+export { Pagination } from './Pagination';

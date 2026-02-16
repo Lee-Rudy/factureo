@@ -198,8 +198,8 @@ export default function DashboardScreen() {
           count={`${clients.length} Client(s)`}
           icon="people-outline"
           recentItems={clients.slice(0, 2).map((c) => ({
-            label: c.name,
-            value: `${c.siret || 'N/A'}\n${c.phone}`,
+            label: `${c.prenom} ${c.nom}`,
+            value: `${c.email}\n${c.phone}`,
           }))}
           linkText="Voir tous les clients"
           onLinkPress={() => navigation.navigate(ROUTES.CLIENTS_LIST)}

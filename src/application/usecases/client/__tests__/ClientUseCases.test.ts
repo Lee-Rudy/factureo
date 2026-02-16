@@ -20,36 +20,40 @@ describe('ClientUseCases', () => {
     it('devrait créer un client avec des données valides', async () => {
       const newClient = await clientUseCases.create({
         userId: 'user-1',
-        name: 'Test Client',
+        prenom: 'Test',
+        nom: 'Client',
         email: 'client@test.com',
         phone: '+33 6 12 34 56 78',
-        address: 'Paris',
+        adress: 'Paris',
       });
 
-      expect(newClient.name).toBe('Test Client');
+      expect(newClient.prenom).toBe('Test');
+      expect(newClient.nom).toBe('Client');
       expect(newClient.email).toBe('client@test.com');
     });
 
-    it('devrait rejeter un client sans nom', async () => {
+    it('devrait rejeter un client sans prénom', async () => {
       await expect(
         clientUseCases.create({
           userId: 'user-1',
-          name: '',
+          prenom: '',
+          nom: 'Client',
           email: 'client@test.com',
           phone: '+33 6 12 34 56 78',
-          address: 'Paris',
+          adress: 'Paris',
         })
-      ).rejects.toThrow('Le nom du client est obligatoire');
+      ).rejects.toThrow('Le prénom du client est obligatoire');
     });
 
     it('devrait rejeter un email invalide', async () => {
       await expect(
         clientUseCases.create({
           userId: 'user-1',
-          name: 'Test Client',
+          prenom: 'Test',
+          nom: 'Client',
           email: 'invalid-email',
           phone: '+33 6 12 34 56 78',
-          address: 'Paris',
+          adress: 'Paris',
         })
       ).rejects.toThrow('Format d\'email invalide');
     });
@@ -58,8 +62,27 @@ describe('ClientUseCases', () => {
   describe('Liste clients', () => {
     it('devrait retourner la liste des clients d\'un utilisateur', async () => {
       const clients = await clientUseCases.list('user-1');
-      expect(clients.length).toBe(2);
-      expect(clients[0].name).toBe('Informatique SARL');
+      expect(clients.length).toBe(5);
+      expect(clients[0].prenom).toBe('Jean');
+    });
+  });
+
+  describe('Recherche clients', () => {
+    it('devrait trouver un client par prénom', async () => {
+      const results = await clientUseCases.search('user-1', 'Jean');
+      expect(results.length).toBeGreaterThan(0);
+      expect(results[0].prenom).toBe('Jean');
+    });
+
+    it('devrait trouver un client par nom', async () => {
+      const results = await clientUseCases.search('user-1', 'Dupont');
+      expect(results.length).toBeGreaterThan(0);
+      expect(results[0].nom).toBe('Dupont');
+    });
+
+    it('devrait retourner tous les clients si recherche vide', async () => {
+      const results = await clientUseCases.search('user-1', '');
+      expect(results.length).toBe(5);
     });
   });
 
