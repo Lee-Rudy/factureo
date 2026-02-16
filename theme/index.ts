@@ -41,7 +41,7 @@ export {
 } from './utils';
 
 /**
- * Export d'un objet theme complet pour faciliter l'utilisation
+ * Export d'un objet theme complet
  */
 import { colors } from './colors';
 import { typography, fontFamilies, fontSizes } from './typography';

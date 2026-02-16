@@ -1,0 +1,30 @@
+services:
+  factureo-app:
+    image: factureo-app:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: factureo-dev
+    ports:
+      - "8081:8081"
+      - "19000:19000"
+      - "19001:19001"
+      - "19002:19002"
+    environment:
+      NODE_ENV: development
+      EXPO_DEVTOOLS_LISTEN_ADDRESS: 0.0.0.0
+    command: npx expo start --tunnel
+    stdin_open: true
+    tty: true
+
+  factureo-tests:
+    image: factureo-app:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: factureo-tests
+    environment:
+      NODE_ENV: test
+    command: npm test
+    profiles:
+      - tests

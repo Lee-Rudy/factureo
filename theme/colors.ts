@@ -70,7 +70,7 @@ export const colors = {
     inverse: '#FFFFFF',
   },
 
-  // États
+  // états
   error: {
     main: '#EF4444',
     light: '#F87171',
